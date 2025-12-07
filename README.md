@@ -1,4 +1,4 @@
-# 🔍 SHOSHI Duplicate File Finder
+# 🔍 Duplicate File Finder
 
 A Python application with a graphical interface for identifying and deleting duplicate files on your computer or external drives.
 
