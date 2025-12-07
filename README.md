@@ -99,4 +99,4 @@ The executable will be created in the `dist/` folder.
 
 ---
 
-**Created with ❤️ un israel**
+**Created with ❤️ in israel**
