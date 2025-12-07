@@ -26,14 +26,21 @@ class DuplicateFinderApp:
     
     def setup_ui(self):
         """יצירת הממשק"""
-        # כותרת
-        title_frame = ttk.Frame(self.root, padding="10")
+        # כותרת עם רקע תכלת בהיר
+        title_frame = tk.Frame(self.root, bg="#E3F2FD", height=80)
         title_frame.pack(fill=tk.X)
+        title_frame.pack_propagate(False)
         
-        ttk.Label(title_frame, text="🔍 מזהה קבצים כפולים", 
-                 font=("Arial", 18, "bold")).pack()
-        ttk.Label(title_frame, text="SHOSHI ER | 2025", 
-                 font=("Arial", 9), foreground="gray").pack(pady=2)
+        # תוכן הכותרת
+        title_content = tk.Frame(title_frame, bg="#E3F2FD")
+        title_content.pack(expand=True)
+        
+        tk.Label(title_content, text="🔍 מזהה קבצים כפולים", 
+                bg="#E3F2FD", fg="#1565C0",
+                font=("Segoe UI", 18, "bold")).pack()
+        tk.Label(title_content, text="SHOSHI ER | 2025", 
+                bg="#E3F2FD", fg="#64B5F6",
+                font=("Segoe UI", 9)).pack(pady=2)
         
         ttk.Separator(self.root, orient="horizontal").pack(fill=tk.X, pady=10)
         
@@ -70,8 +77,6 @@ class DuplicateFinderApp:
         ttk.Label(options_row, text="דמיון מינימלי:").pack(side=tk.LEFT, padx=(20, 5))
         ttk.Spinbox(options_row, from_=50, to=100, textvariable=self.min_similarity, 
                    width=6).pack(side=tk.LEFT)
-        ttk.Label(options_row, text="%").pack(side=tk.LEFT, padx=(2, 0))
-        
         ttk.Label(options_row, text="%").pack(side=tk.LEFT, padx=(2, 0))
         
         ttk.Separator(self.root, orient="horizontal").pack(fill=tk.X, pady=10)
@@ -116,12 +121,12 @@ class DuplicateFinderApp:
         
         # Canvas עבור תוצאות
         self.results_canvas = tk.Canvas(results_frame, yscrollcommand=scrollbar.set, 
-                                       highlightthickness=0)
+                                       bg="#f0f0f0", highlightthickness=0)
         self.results_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.config(command=self.results_canvas.yview)
         
-        # Frame פנימי לתוצאות
-        self.results_inner_frame = ttk.Frame(self.results_canvas)
+        # Frame פנימי לתוצאות עם רקע נקי
+        self.results_inner_frame = tk.Frame(self.results_canvas, bg="#f0f0f0")
         self.canvas_frame = self.results_canvas.create_window((0, 0), 
                                                               window=self.results_inner_frame, 
                                                               anchor=tk.NW)
@@ -369,48 +374,133 @@ class DuplicateFinderApp:
         
         self.update_status(status)
         
-        # הצגת התוצאות
+        # הצגת התוצאות בעיצוב מעוגל ומסוגנן
         for i, dup_group in enumerate(display_groups):
             if i % 5 == 0 and i > 0:
                 self.root.update_idletasks()
             
-            # כותרת קבוצה
+            # כרטיס מעוגל ומוצל
+            card = tk.Frame(self.results_inner_frame, bg="white", relief=tk.FLAT, bd=0)
+            card.pack(fill=tk.X, pady=12, padx=20)
+            
+            # אפקט צל עם מסגרת אפורה דקה
+            shadow = tk.Frame(card, bg="#e0e0e0", height=2)
+            shadow.pack(side=tk.BOTTOM, fill=tk.X)
+            
+            # כותרת מעוצבת
             if dup_group['type'] == 'identical':
-                group_title = f"קבוצה {i+1}: זהים"
+                header_bg = "#e8f5e9"
+                badge_bg = "#4caf50"
+                badge_text = "✓ קבצים זהים"
             else:
-                group_title = f"קבוצה {i+1}: דומים {dup_group['similarity']}%"
+                header_bg = "#fff3e0"
+                badge_bg = "#ff9800"
+                similarity = dup_group['similarity']
+                badge_text = f"≈ דומים {similarity}%"
             
-            group_frame = ttk.LabelFrame(self.results_inner_frame, 
-                                        text=group_title, 
-                                        padding="10")
-            group_frame.pack(fill=tk.X, pady=5, padx=5)
+            header = tk.Frame(card, bg=header_bg, height=50)
+            header.pack(fill=tk.X)
+            header.pack_propagate(False)
             
-            for filepath in dup_group['files']:
-                file_frame = ttk.Frame(group_frame)
-                file_frame.pack(fill=tk.X, pady=2)
+            # תוכן כותרת
+            header_inner = tk.Frame(header, bg=header_bg)
+            header_inner.pack(fill=tk.BOTH, expand=True, padx=20, pady=12)
+            
+            # תג צבעוני מעוגל
+            badge_frame = tk.Frame(header_inner, bg=badge_bg, bd=0)
+            badge_frame.pack(side=tk.RIGHT)
+            
+            badge_label = tk.Label(badge_frame, text=badge_text,
+                                  bg=badge_bg, fg="white",
+                                  font=("Segoe UI", 9, "bold"),
+                                  padx=15, pady=5)
+            badge_label.pack()
+            
+            # מספר קבוצה
+            tk.Label(header_inner, text=f"קבוצה #{i+1}",
+                    bg=header_bg, fg="#424242",
+                    font=("Segoe UI", 12, "bold")).pack(side=tk.RIGHT, padx=15)
+            
+            # תוכן הקבוצה
+            content = tk.Frame(card, bg="white")
+            content.pack(fill=tk.X, padx=20, pady=15)
+            
+            for file_idx, filepath in enumerate(dup_group['files']):
+                # שורת קובץ עם רקע מעט אפור בהובר
+                file_row = tk.Frame(content, bg="white")
+                file_row.pack(fill=tk.X, pady=8)
                 
-                # Checkbox
+                # Checkbox מודרני
                 var = tk.IntVar(value=0)
                 self.file_checkboxes[filepath] = var
                 
-                cb = ttk.Checkbutton(file_frame, variable=var, 
-                                    onvalue=1, offvalue=0)
-                cb.pack(side=tk.LEFT, padx=5)
+                cb = tk.Checkbutton(file_row, variable=var,
+                                  onvalue=1, offvalue=0,
+                                  bg="white", activebackground="white",
+                                  font=("Segoe UI", 10),
+                                  bd=0, highlightthickness=0,
+                                  selectcolor="#2196F3")
+                cb.pack(side=tk.LEFT, padx=(0, 15))
                 
-                # מידע על הקובץ
+                # אייקון קובץ גדול ומעוצב
+                icon_label = tk.Label(file_row, text="📄", bg="white",
+                                     font=("Segoe UI", 20))
+                icon_label.pack(side=tk.LEFT, padx=(0, 12))
+                
+                # מידע קובץ
+                info_frame = tk.Frame(file_row, bg="white")
+                info_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
+                
+                # שם קובץ
+                filename = os.path.basename(filepath)
+                name_label = tk.Label(info_frame, text=filename,
+                                     bg="white", fg="#212121",
+                                     font=("Segoe UI", 10, "bold"),
+                                     anchor="w")
+                name_label.pack(fill=tk.X)
+                
+                # פרטים
+                folder_path = os.path.dirname(filepath)
                 size = os.path.getsize(filepath)
                 size_str = self.format_size(size)
                 
-                file_info = f"{filepath} ({size_str})"
-                label = ttk.Label(file_frame, text=file_info, wraplength=650)
-                label.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+                details = f"📂 {folder_path}  •  {size_str}"
+                details_label = tk.Label(info_frame, text=details,
+                                        bg="white", fg="#757575",
+                                        font=("Segoe UI", 8),
+                                        anchor="w")
+                details_label.pack(fill=tk.X, pady=(2, 0))
                 
-                # כפתורים
-                ttk.Button(file_frame, text="📄", width=3,
-                          command=lambda p=filepath: self.open_file(p)).pack(side=tk.LEFT, padx=2)
+                # כפתורים מעוגלים
+                buttons_frame = tk.Frame(file_row, bg="white")
+                buttons_frame.pack(side=tk.LEFT, padx=10)
                 
-                ttk.Button(file_frame, text="📁", width=3,
-                          command=lambda p=filepath: self.open_folder(p)).pack(side=tk.LEFT, padx=2)
+                # כפתור פתח
+                open_btn = tk.Button(buttons_frame, text="פתח",
+                                   bg="#2196F3", fg="white",
+                                   font=("Segoe UI", 9, "bold"),
+                                   relief=tk.FLAT, bd=0,
+                                   padx=18, pady=6,
+                                   cursor="hand2",
+                                   activebackground="#1976D2",
+                                   command=lambda p=filepath: self.open_file(p))
+                open_btn.pack(side=tk.LEFT, padx=3)
+                
+                # כפתור תיקייה
+                folder_btn = tk.Button(buttons_frame, text="תיקייה",
+                                      bg="#9E9E9E", fg="white",
+                                      font=("Segoe UI", 9, "bold"),
+                                      relief=tk.FLAT, bd=0,
+                                      padx=18, pady=6,
+                                      cursor="hand2",
+                                      activebackground="#757575",
+                                      command=lambda p=filepath: self.open_folder(p))
+                folder_btn.pack(side=tk.LEFT, padx=3)
+                
+                # קו מפריד דק
+                if file_idx < len(dup_group['files']) - 1:
+                    separator = tk.Frame(content, bg="#eeeeee", height=1)
+                    separator.pack(fill=tk.X, pady=5)
     
     def format_size(self, size):
         """פורמט גודל קובץ"""

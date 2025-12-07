@@ -2,6 +2,12 @@
 
 A Python application with a graphical interface for identifying and deleting duplicate files on your computer or external drives.
 
+## 📥 Quick Download
+
+**[⬇️ Download Application for Immediate Use](https://drive.google.com/file/d/1Yn7oB7ABQNgMY7VTPKSa3uWCyRp6qJcz/view?usp=drive_link)**
+
+Click the link above to download the ready-to-use application. No installation required!
+
 ## ✨ Features
 
 - ✅ **Free Folder Selection** - Any folder on your computer or external drive
