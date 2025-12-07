@@ -1,4 +1,4 @@
-# 🔍 SHOSHI Duplicate File Finder
+# 🔍 Duplicate File Finder
 
 A Python application with a graphical interface for identifying and deleting duplicate files on your computer or external drives.
 
@@ -105,4 +105,4 @@ The executable will be created in the `dist/` folder.
 
 ---
 
-**Created with ❤️ un israel**
+**Created with ❤️ in israel**
