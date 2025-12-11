@@ -14,7 +14,8 @@ class DuplicateFinderApp:
     def __init__(self, root):
         self.root = root
         self.root.title("מזהה קבצים כפולים - Duplicate File Finder")
-        self.root.geometry("1000x700")
+        self.root.geometry("1200x900")
+        self.root.configure(bg="#f5f5f5")
         
         # משתנים
         self.selected_folder = tk.StringVar()
@@ -26,101 +27,245 @@ class DuplicateFinderApp:
     
     def setup_ui(self):
         """יצירת הממשק"""
-        # כותרת עם רקע תכלת בהיר
-        title_frame = tk.Frame(self.root, bg="#E3F2FD", height=80)
+        # כותרת עם גרדיאנט מודרני
+        title_frame = tk.Frame(self.root, bg="#1976D2", height=70)
         title_frame.pack(fill=tk.X)
         title_frame.pack_propagate(False)
         
         # תוכן הכותרת
-        title_content = tk.Frame(title_frame, bg="#E3F2FD")
+        title_content = tk.Frame(title_frame, bg="#1976D2")
         title_content.pack(expand=True)
         
         tk.Label(title_content, text="🔍 מזהה קבצים כפולים", 
-                bg="#E3F2FD", fg="#1565C0",
-                font=("Segoe UI", 18, "bold")).pack()
+                bg="#1976D2", fg="white",
+                font=("Segoe UI", 18, "bold")).pack(pady=(5, 0))
         tk.Label(title_content, text="SHOSHI ER | 2025", 
-                bg="#E3F2FD", fg="#64B5F6",
-                font=("Segoe UI", 9)).pack(pady=2)
+                bg="#1976D2", fg="#BBDEFB",
+                font=("Segoe UI", 8)).pack(pady=(0, 5))
         
-        ttk.Separator(self.root, orient="horizontal").pack(fill=tk.X, pady=10)
+        # קו הפרדה צבעוני
+        tk.Frame(self.root, bg="#64B5F6", height=3).pack(fill=tk.X)
         
         # שלב 1 - בחירת תיקייה
-        folder_frame = ttk.LabelFrame(self.root, text="שלב 1: בחר תיקייה", padding="15")
-        folder_frame.pack(fill=tk.X, padx=20, pady=10)
+        folder_frame = tk.Frame(self.root, bg="white", relief=tk.FLAT, bd=0)
+        folder_frame.pack(fill=tk.X, padx=25, pady=8)
         
-        folder_row = ttk.Frame(folder_frame)
-        folder_row.pack(fill=tk.X)
+        # כותרת שלב
+        tk.Label(folder_frame, text="שלב 1: בחר תיקייה",
+                font=("Segoe UI", 12, "bold"), bg="white", fg="#424242").pack(anchor="e", pady=(8, 6), padx=15)
         
-        ttk.Entry(folder_row, textvariable=self.selected_folder, 
-                 font=("Arial", 10)).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
-        ttk.Button(folder_row, text="📁 בחר תיקייה", 
-                  command=self.browse_folder).pack(side=tk.LEFT)
+        folder_row = tk.Frame(folder_frame, bg="white")
+        folder_row.pack(fill=tk.X, padx=15, pady=(0, 15))
+        
+        # תיבת טקסט מעוצבת
+        folder_entry = tk.Entry(folder_row, textvariable=self.selected_folder,
+                               font=("Segoe UI", 11), relief=tk.SOLID, bd=1,
+                               highlightthickness=2, highlightcolor="#2196F3",
+                               highlightbackground="#E0E0E0")
+        folder_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10), ipady=8)
+        
+        # כפתור גדול ומעוצב
+        browse_btn = tk.Button(folder_row, text="📁 בחר תיקייה",
+                              command=self.browse_folder,
+                              font=("Segoe UI", 11, "bold"),
+                              bg="#2196F3", fg="white",
+                              activebackground="#1976D2", activeforeground="white",
+                              relief=tk.FLAT, bd=0,
+                              padx=25, pady=12, cursor="hand2")
+        browse_btn.pack(side=tk.LEFT)
         
         # שלב 2 - אפשרויות
-        options_frame = ttk.LabelFrame(self.root, text="שלב 2: אפשרויות סריקה", padding="15")
-        options_frame.pack(fill=tk.X, padx=20, pady=10)
+        options_frame = tk.Frame(self.root, bg="white", relief=tk.FLAT, bd=0)
+        options_frame.pack(fill=tk.X, padx=25, pady=8)
+        
+        tk.Label(options_frame, text="שלב 2: אפשרויות סריקה",
+                font=("Segoe UI", 12, "bold"), bg="white", fg="#424242").pack(anchor="e", pady=(8, 6), padx=15)
         
         self.scan_by_hash = tk.BooleanVar(value=True)
         self.scan_by_name = tk.BooleanVar(value=True)
         self.min_similarity = tk.IntVar(value=85)
         
         # שורת אפשרויות
-        options_row = ttk.Frame(options_frame)
-        options_row.pack(fill=tk.X)
+        options_row = tk.Frame(options_frame, bg="white")
+        options_row.pack(fill=tk.X, padx=15, pady=(0, 15))
         
-        ttk.Checkbutton(options_row, text="זיהוי קבצים זהים", 
-                       variable=self.scan_by_hash).pack(side=tk.LEFT, padx=10)
+        # Checkboxes מעוצבים
+        check1 = tk.Checkbutton(options_row, text="זיהוי קבצים זהים",
+                               variable=self.scan_by_hash,
+                               font=("Segoe UI", 11), bg="white",
+                               activebackground="white", selectcolor="#4CAF50",
+                               cursor="hand2")
+        check1.pack(side=tk.RIGHT, padx=15)
         
-        ttk.Checkbutton(options_row, text="זיהוי שמות דומים", 
-                       variable=self.scan_by_name).pack(side=tk.LEFT, padx=10)
+        check2 = tk.Checkbutton(options_row, text="זיהוי שמות דומים",
+                               variable=self.scan_by_name,
+                               font=("Segoe UI", 11), bg="white",
+                               activebackground="white", selectcolor="#FF9800",
+                               cursor="hand2")
+        check2.pack(side=tk.RIGHT, padx=15)
         
-        ttk.Label(options_row, text="דמיון מינימלי:").pack(side=tk.LEFT, padx=(20, 5))
-        ttk.Spinbox(options_row, from_=50, to=100, textvariable=self.min_similarity, 
-                   width=6).pack(side=tk.LEFT)
-        ttk.Label(options_row, text="%").pack(side=tk.LEFT, padx=(2, 0))
+        # בורר דמיון
+        similarity_frame = tk.Frame(options_row, bg="white")
+        similarity_frame.pack(side=tk.RIGHT, padx=15)
         
-        ttk.Separator(self.root, orient="horizontal").pack(fill=tk.X, pady=10)
+        tk.Label(similarity_frame, text="דמיון מינימלי:",
+                font=("Segoe UI", 11), bg="white", fg="#616161").pack(side=tk.RIGHT, padx=5)
         
-        # שלב 3 - כפתורי פעולה
-        button_frame = ttk.Frame(self.root, padding="10")
+        spin = tk.Spinbox(similarity_frame, from_=50, to=100,
+                         textvariable=self.min_similarity,
+                         font=("Segoe UI", 11), width=5,
+                         relief=tk.SOLID, bd=1)
+        spin.pack(side=tk.RIGHT, padx=5)
+        
+        tk.Label(similarity_frame, text="%",
+                font=("Segoe UI", 11), bg="white", fg="#616161").pack(side=tk.RIGHT)
+        
+        # שלב 3 - כפתורי פעולה גדולים
+        button_frame = tk.Frame(self.root, bg="#f5f5f5", pady=8)
         button_frame.pack(fill=tk.X)
         
-        self.scan_button = ttk.Button(button_frame, text="🔍 סרוק תיקייה", 
-                                     command=self.start_scan)
-        self.scan_button.pack(side=tk.LEFT, padx=10)
+        # כפתור סריקה ראשי - ירוק וגדול
+        self.scan_button = tk.Button(button_frame, text="🔍 התחל סריקה",
+                                     command=self.start_scan,
+                                     font=("Segoe UI", 12, "bold"),
+                                     bg="#4CAF50", fg="white",
+                                     activebackground="#388E3C", activeforeground="white",
+                                     relief=tk.FLAT, bd=0,
+                                     padx=35, pady=10, cursor="hand2")
+        self.scan_button.pack(side=tk.RIGHT, padx=15)
         
-        self.delete_button = ttk.Button(button_frame, text="🗑️ מחק מסומנים", 
-                                       command=self.delete_selected, state=tk.DISABLED)
-        self.delete_button.pack(side=tk.LEFT, padx=10)
+        # אפקטי hover לכפתור סריקה
+        def scan_enter(e):
+            self.scan_button.config(bg="#66BB6A")
+        def scan_leave(e):
+            self.scan_button.config(bg="#4CAF50")
+        self.scan_button.bind("<Enter>", scan_enter)
+        self.scan_button.bind("<Leave>", scan_leave)
         
-        self.help_button = ttk.Button(button_frame, text="❓ עזרה", 
-                                     command=self.show_help)
-        self.help_button.pack(side=tk.RIGHT, padx=10)
+        # כפתור מחיקה - אדום
+        self.delete_button = tk.Button(button_frame, text="🗑️ מחק קבצים מסומנים",
+                                       command=self.delete_selected,
+                                       font=("Segoe UI", 12, "bold"),
+                                       bg="#9E9E9E", fg="white",
+                                       activebackground="#d32f2f", activeforeground="white",
+                                       relief=tk.FLAT, bd=0, state=tk.DISABLED,
+                                       disabledforeground="#E0E0E0",
+                                       padx=35, pady=10, cursor="hand2")
+        self.delete_button.pack(side=tk.RIGHT, padx=15)
         
-        ttk.Separator(self.root, orient="horizontal").pack(fill=tk.X, pady=5)
+        # אפקטי hover לכפתור מחיקה
+        def delete_enter(e):
+            if self.delete_button['state'] == tk.NORMAL:
+                self.delete_button.config(bg="#EF5350")
+        def delete_leave(e):
+            if self.delete_button['state'] == tk.NORMAL:
+                self.delete_button.config(bg="#f44336")
+        self.delete_button.bind("<Enter>", delete_enter)
+        self.delete_button.bind("<Leave>", delete_leave)
         
-        # סטטוס
-        status_frame = ttk.Frame(self.root, padding="5")
-        status_frame.pack(fill=tk.X)
+        # כפתור עזרה - כחול בהיר
+        self.help_button = tk.Button(button_frame, text="❓ עזרה",
+                                     command=self.show_help,
+                                     font=("Segoe UI", 10, "bold"),
+                                     bg="#03A9F4", fg="white",
+                                     activebackground="#0288D1", activeforeground="white",
+                                     relief=tk.FLAT, bd=0,
+                                     padx=25, pady=8, cursor="hand2")
+        self.help_button.pack(side=tk.LEFT, padx=15)
         
-        self.status_label = ttk.Label(status_frame, text="מוכן לסריקה", 
-                                     font=("Arial", 10))
+        # אפקטי hover לכפתור עזרה
+        def help_enter(e):
+            self.help_button.config(bg="#29B6F6")
+        def help_leave(e):
+            self.help_button.config(bg="#03A9F4")
+        self.help_button.bind("<Enter>", help_enter)
+        self.help_button.bind("<Leave>", help_leave)
+        
+        # סטטוס בולט
+        status_frame = tk.Frame(self.root, bg="#E3F2FD", relief=tk.FLAT, bd=0)
+        status_frame.pack(fill=tk.X, padx=25, pady=5)
+        
+        self.status_label = tk.Label(status_frame, text="✓ מוכן לסריקה",
+                                     font=("Segoe UI", 10, "bold"),
+                                     bg="#E3F2FD", fg="#1976D2",
+                                     pady=6)
         self.status_label.pack()
         
-        # פס התקדמות
-        self.progress = ttk.Progressbar(self.root, mode='indeterminate')
-        self.progress.pack(fill=tk.X, padx=20, pady=(0, 10))
+        # פס התקדמות גדול יותר
+        progress_container = tk.Frame(self.root, bg="#f5f5f5")
+        progress_container.pack(fill=tk.X, padx=25, pady=(0, 8))
+        
+        self.progress = ttk.Progressbar(progress_container, mode='indeterminate', length=400)
+        self.progress.pack(pady=5)
         
         # תוצאות
-        results_frame = ttk.LabelFrame(self.root, text="תוצאות", padding="10")
-        results_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 10))
+        results_frame = tk.Frame(self.root, bg="white", relief=tk.FLAT, bd=0)
+        results_frame.pack(fill=tk.BOTH, expand=True, padx=25, pady=(0, 15))
         
-        # Scrollbar
-        scrollbar = ttk.Scrollbar(results_frame)
+        # כותרת תוצאות
+        results_header = tk.Frame(results_frame, bg="#FAFAFA", height=45)
+        results_header.pack(fill=tk.X)
+        results_header.pack_propagate(False)
+        
+        tk.Label(results_header, text="תוצאות הסריקה",
+                font=("Segoe UI", 13, "bold"), bg="#FAFAFA", fg="#424242").pack(anchor="e", padx=15, pady=10)
+        
+        # תוכן תוצאות עם Scrollbar
+        results_content = tk.Frame(results_frame, bg="white")
+        results_content.pack(fill=tk.BOTH, expand=True)
+        
+        # פס כלים לגלילה מהירה
+        scroll_toolbar = tk.Frame(results_content, bg="#EEEEEE", height=35)
+        scroll_toolbar.pack(fill=tk.X, side=tk.TOP)
+        
+        tk.Label(scroll_toolbar, text="⚡ גלילה מהירה:",
+                font=("Segoe UI", 9, "bold"), bg="#EEEEEE", fg="#616161").pack(side=tk.RIGHT, padx=10)
+        
+        # כפתורי גלילה מהירה
+        def scroll_to_top():
+            self.results_canvas.yview_moveto(0)
+        
+        def scroll_to_bottom():
+            self.results_canvas.yview_moveto(1)
+        
+        tk.Button(scroll_toolbar, text="⬆ תחילה",
+                 command=scroll_to_top,
+                 font=("Segoe UI", 9, "bold"),
+                 bg="#90CAF9", fg="#0D47A1",
+                 activebackground="#64B5F6",
+                 relief=tk.FLAT, bd=0,
+                 padx=15, pady=5, cursor="hand2").pack(side=tk.RIGHT, padx=5)
+        
+        tk.Button(scroll_toolbar, text="⬇ סוף",
+                 command=scroll_to_bottom,
+                 font=("Segoe UI", 9, "bold"),
+                 bg="#90CAF9", fg="#0D47A1",
+                 activebackground="#64B5F6",
+                 relief=tk.FLAT, bd=0,
+                 padx=15, pady=5, cursor="hand2").pack(side=tk.RIGHT, padx=5)
+        
+        tk.Label(scroll_toolbar, text="🎮 חיצים / Page Up/Down / Home/End",
+                font=("Segoe UI", 8), bg="#EEEEEE", fg="#9E9E9E").pack(side=tk.LEFT, padx=15)
+        
+        # אינדיקטור מיקום גלילה
+        self.scroll_position_label = tk.Label(scroll_toolbar, text="",
+                font=("Segoe UI", 8, "bold"), bg="#EEEEEE", fg="#1976D2")
+        self.scroll_position_label.pack(side=tk.LEFT, padx=10)
+        
+        # מיכל ה-Canvas
+        canvas_container = tk.Frame(results_content, bg="white")
+        canvas_container.pack(fill=tk.BOTH, expand=True)
+        
+        # מיכל ה-Canvas
+        canvas_container = tk.Frame(results_content, bg="white")
+        canvas_container.pack(fill=tk.BOTH, expand=True)
+        
+        # Scrollbar מעוצב
+        scrollbar = ttk.Scrollbar(canvas_container)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
         # Canvas עבור תוצאות
-        self.results_canvas = tk.Canvas(results_frame, yscrollcommand=scrollbar.set, 
+        self.results_canvas = tk.Canvas(canvas_container, yscrollcommand=scrollbar.set, 
                                        bg="#f0f0f0", highlightthickness=0)
         self.results_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.config(command=self.results_canvas.yview)
@@ -138,15 +283,55 @@ class DuplicateFinderApp:
             canvas_width = self.results_canvas.winfo_width()
             if canvas_width > 1:
                 self.results_canvas.itemconfig(self.canvas_frame, width=canvas_width)
+            update_scroll_position()
+        
+        # עדכון אינדיקטור מיקום
+        def update_scroll_position(*args):
+            try:
+                scroll_pos = self.results_canvas.yview()
+                if scroll_pos[1] - scroll_pos[0] >= 1.0:
+                    self.scroll_position_label.config(text="")
+                else:
+                    percentage = int(scroll_pos[0] * 100)
+                    self.scroll_position_label.config(text=f"📍 {percentage}%")
+            except:
+                pass
         
         self.results_inner_frame.bind("<Configure>", configure_scroll)
         self.results_canvas.bind("<Configure>", configure_scroll)
+        self.results_canvas.config(yscrollcommand=lambda *args: (scrollbar.set(*args), update_scroll_position()))
         
-        # גלילה עם גלגלת העכבר
+        # גלילה עם גלגלת העכבר - משופרת וחלקה יותר
         def on_mousewheel(event):
-            self.results_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            # גלילה מהירה יותר - 3 יחידות במקום 1
+            self.results_canvas.yview_scroll(int(-1*(event.delta/40)), "units")
         
+        # גלילה עם חיצי מקלדת
+        def on_key_scroll(event):
+            if event.keysym == 'Up':
+                self.results_canvas.yview_scroll(-1, "units")
+            elif event.keysym == 'Down':
+                self.results_canvas.yview_scroll(1, "units")
+            elif event.keysym == 'Prior':  # Page Up
+                self.results_canvas.yview_scroll(-1, "pages")
+            elif event.keysym == 'Next':  # Page Down
+                self.results_canvas.yview_scroll(1, "pages")
+            elif event.keysym == 'Home':
+                self.results_canvas.yview_moveto(0)
+            elif event.keysym == 'End':
+                self.results_canvas.yview_moveto(1)
+        
+        # קישור אירועי גלילה
         self.results_canvas.bind_all("<MouseWheel>", on_mousewheel)
+        self.results_canvas.bind_all("<Up>", on_key_scroll)
+        self.results_canvas.bind_all("<Down>", on_key_scroll)
+        self.results_canvas.bind_all("<Prior>", on_key_scroll)  # Page Up
+        self.results_canvas.bind_all("<Next>", on_key_scroll)   # Page Down
+        self.results_canvas.bind_all("<Home>", on_key_scroll)
+        self.results_canvas.bind_all("<End>", on_key_scroll)
+        
+        # הגדרת פוקוס כדי שהמקלדת תעבוד
+        self.results_canvas.bind("<Button-1>", lambda e: self.results_canvas.focus_set())
     
     def browse_folder(self):
         """בחירת תיקייה"""
@@ -237,7 +422,7 @@ class DuplicateFinderApp:
         self.root.after(0, lambda: self.scan_button.config(state=tk.NORMAL))
         
         if duplicates:
-            self.root.after(0, lambda: self.delete_button.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.delete_button.config(state=tk.NORMAL, bg="#f44336"))
     
     def find_by_hash(self, files):
         """מציאת קבצים זהים לפי Hash - מהיר ויעיל"""
@@ -379,68 +564,134 @@ class DuplicateFinderApp:
             if i % 5 == 0 and i > 0:
                 self.root.update_idletasks()
             
-            # כרטיס מעוגל ומוצל
-            card = tk.Frame(self.results_inner_frame, bg="white", relief=tk.FLAT, bd=0)
-            card.pack(fill=tk.X, pady=12, padx=20)
+            # כרטיס מעוגל עם צל בולט
+            card_container = tk.Frame(self.results_inner_frame, bg="#f0f0f0", relief=tk.FLAT, bd=0)
+            card_container.pack(fill=tk.X, pady=15, padx=25)
             
-            # אפקט צל עם מסגרת אפורה דקה
-            shadow = tk.Frame(card, bg="#e0e0e0", height=2)
-            shadow.pack(side=tk.BOTTOM, fill=tk.X)
+            # צל תחתון
+            shadow_bottom = tk.Frame(card_container, bg="#D0D0D0", height=4)
+            shadow_bottom.pack(side=tk.BOTTOM, fill=tk.X)
             
-            # כותרת מעוצבת
+            # הכרטיס עצמו
+            card = tk.Frame(card_container, bg="white", relief=tk.RAISED, bd=1)
+            card.pack(fill=tk.X)
+            
+            # כותרת מעוצבת עם צבעים בולטים
             if dup_group['type'] == 'identical':
-                header_bg = "#e8f5e9"
-                badge_bg = "#4caf50"
-                badge_text = "✓ קבצים זהים"
+                header_bg = "#C8E6C9"
+                badge_bg = "#4CAF50"
+                badge_text = "✓ קבצים זהים 100%"
+                header_icon = "🟢"
             else:
-                header_bg = "#fff3e0"
-                badge_bg = "#ff9800"
+                header_bg = "#FFE0B2"
+                badge_bg = "#FF9800"
                 similarity = dup_group['similarity']
                 badge_text = f"≈ דומים {similarity}%"
+                header_icon = "🟡"
             
-            header = tk.Frame(card, bg=header_bg, height=50)
+            header = tk.Frame(card, bg=header_bg, height=60)
             header.pack(fill=tk.X)
             header.pack_propagate(False)
             
             # תוכן כותרת
             header_inner = tk.Frame(header, bg=header_bg)
-            header_inner.pack(fill=tk.BOTH, expand=True, padx=20, pady=12)
+            header_inner.pack(fill=tk.BOTH, expand=True, padx=20, pady=15)
+            
+            # אייקון בצד שמאל
+            tk.Label(header_inner, text=header_icon,
+                    bg=header_bg, font=("Segoe UI", 20)).pack(side=tk.LEFT, padx=(0, 10))
             
             # תג צבעוני מעוגל
-            badge_frame = tk.Frame(header_inner, bg=badge_bg, bd=0)
-            badge_frame.pack(side=tk.RIGHT)
+            badge_frame = tk.Frame(header_inner, bg=badge_bg, bd=0, relief=tk.FLAT)
+            badge_frame.pack(side=tk.RIGHT, padx=10)
             
             badge_label = tk.Label(badge_frame, text=badge_text,
                                   bg=badge_bg, fg="white",
-                                  font=("Segoe UI", 9, "bold"),
-                                  padx=15, pady=5)
+                                  font=("Segoe UI", 11, "bold"),
+                                  padx=20, pady=7)
             badge_label.pack()
             
             # מספר קבוצה
-            tk.Label(header_inner, text=f"קבוצה #{i+1}",
-                    bg=header_bg, fg="#424242",
-                    font=("Segoe UI", 12, "bold")).pack(side=tk.RIGHT, padx=15)
+            group_label = tk.Label(header_inner, text=f"קבוצה #{i+1}",
+                    bg=header_bg, fg="#212121",
+                    font=("Segoe UI", 14, "bold"))
+            group_label.pack(side=tk.RIGHT, padx=15)
+            
+            # מספר קבצים בקבוצה
+            file_count = len(dup_group['files'])
+            count_label = tk.Label(header_inner, text=f"({file_count} קבצים)",
+                    bg=header_bg, fg="#616161",
+                    font=("Segoe UI", 11))
+            count_label.pack(side=tk.RIGHT, padx=(0, 5))
             
             # תוכן הקבוצה
             content = tk.Frame(card, bg="white")
             content.pack(fill=tk.X, padx=20, pady=15)
             
             for file_idx, filepath in enumerate(dup_group['files']):
-                # שורת קובץ עם רקע מעט אפור בהובר
-                file_row = tk.Frame(content, bg="white")
-                file_row.pack(fill=tk.X, pady=8)
+                # שורת קובץ עם אפקט hover
+                file_row = tk.Frame(content, bg="white", relief=tk.FLAT)
+                file_row.pack(fill=tk.X, pady=8, padx=5)
                 
-                # Checkbox מודרני
+                # אפקט hover לשורת קובץ
+                def make_hover_effect(row):
+                    def on_enter(e):
+                        row.config(bg="#F5F5F5")
+                        for child in row.winfo_children():
+                            try:
+                                if child.winfo_class() != 'Button':
+                                    child.config(bg="#F5F5F5")
+                                    if hasattr(child, 'winfo_children'):
+                                        for subchild in child.winfo_children():
+                                            try:
+                                                if subchild.winfo_class() != 'Button':
+                                                    subchild.config(bg="#F5F5F5")
+                                            except:
+                                                pass
+                            except:
+                                pass
+                    def on_leave(e):
+                        row.config(bg="white")
+                        for child in row.winfo_children():
+                            try:
+                                if child.winfo_class() != 'Button':
+                                    child.config(bg="white")
+                                    if hasattr(child, 'winfo_children'):
+                                        for subchild in child.winfo_children():
+                                            try:
+                                                if subchild.winfo_class() != 'Button':
+                                                    subchild.config(bg="white")
+                                            except:
+                                                pass
+                            except:
+                                pass
+                    row.bind("<Enter>", on_enter)
+                    row.bind("<Leave>", on_leave)
+                make_hover_effect(file_row)
+                
+                # Checkbox גדול ומעוצב בסגנון מודרני
                 var = tk.IntVar(value=0)
                 self.file_checkboxes[filepath] = var
                 
-                cb = tk.Checkbutton(file_row, variable=var,
-                                  onvalue=1, offvalue=0,
-                                  bg="white", activebackground="white",
-                                  font=("Segoe UI", 10),
-                                  bd=0, highlightthickness=0,
-                                  selectcolor="#2196F3")
-                cb.pack(side=tk.LEFT, padx=(0, 15))
+                # יצירת checkbox גדול בעזרת Label
+                checkbox_frame = tk.Frame(file_row, bg="white")
+                checkbox_frame.pack(side=tk.LEFT, padx=(0, 15))
+                
+                checkbox_label = tk.Label(checkbox_frame, text="☐", 
+                                         font=("Segoe UI", 28, "bold"),
+                                         fg="#757575", bg="white",
+                                         cursor="hand2")
+                checkbox_label.pack()
+                
+                def toggle_checkbox(event, v=var, lbl=checkbox_label):
+                    if v.get() == 0:
+                        v.set(1)
+                        lbl.config(text="☑", fg="#2196F3")
+                    else:
+                        v.set(0)
+                        lbl.config(text="☐", fg="#757575")
+                
+                checkbox_label.bind("<Button-1>", toggle_checkbox)
                 
                 # אייקון קובץ גדול ומעוצב
                 icon_label = tk.Label(file_row, text="📄", bg="white",
@@ -449,27 +700,27 @@ class DuplicateFinderApp:
                 
                 # מידע קובץ
                 info_frame = tk.Frame(file_row, bg="white")
-                info_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
+                info_frame.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=10)
                 
-                # שם קובץ
+                # שם קובץ - גדול ובולט
                 filename = os.path.basename(filepath)
                 name_label = tk.Label(info_frame, text=filename,
                                      bg="white", fg="#212121",
-                                     font=("Segoe UI", 10, "bold"),
+                                     font=("Segoe UI", 11, "bold"),
                                      anchor="w")
                 name_label.pack(fill=tk.X)
                 
-                # פרטים
+                # פרטים - יותר קריא
                 folder_path = os.path.dirname(filepath)
                 size = os.path.getsize(filepath)
                 size_str = self.format_size(size)
                 
-                details = f"📂 {folder_path}  •  {size_str}"
+                details = f"📂 {folder_path}  •  📊 {size_str}"
                 details_label = tk.Label(info_frame, text=details,
                                         bg="white", fg="#757575",
-                                        font=("Segoe UI", 8),
+                                        font=("Segoe UI", 9),
                                         anchor="w")
-                details_label.pack(fill=tk.X, pady=(2, 0))
+                details_label.pack(fill=tk.X, pady=(4, 0))
                 
                 # כפתורים מעוגלים
                 buttons_frame = tk.Frame(file_row, bg="white")
@@ -478,24 +729,44 @@ class DuplicateFinderApp:
                 # כפתור פתח
                 open_btn = tk.Button(buttons_frame, text="פתח",
                                    bg="#2196F3", fg="white",
-                                   font=("Segoe UI", 9, "bold"),
+                                   font=("Segoe UI", 10, "bold"),
                                    relief=tk.FLAT, bd=0,
-                                   padx=18, pady=6,
+                                   padx=22, pady=8,
                                    cursor="hand2",
                                    activebackground="#1976D2",
                                    command=lambda p=filepath: self.open_file(p))
                 open_btn.pack(side=tk.LEFT, padx=3)
                 
+                # אפקט hover לכפתור פתח
+                def make_open_hover(btn):
+                    def on_enter(e):
+                        btn.config(bg="#42A5F5")
+                    def on_leave(e):
+                        btn.config(bg="#2196F3")
+                    btn.bind("<Enter>", on_enter)
+                    btn.bind("<Leave>", on_leave)
+                make_open_hover(open_btn)
+                
                 # כפתור תיקייה
                 folder_btn = tk.Button(buttons_frame, text="תיקייה",
-                                      bg="#9E9E9E", fg="white",
-                                      font=("Segoe UI", 9, "bold"),
+                                      bg="#757575", fg="white",
+                                      font=("Segoe UI", 10, "bold"),
                                       relief=tk.FLAT, bd=0,
-                                      padx=18, pady=6,
+                                      padx=22, pady=8,
                                       cursor="hand2",
-                                      activebackground="#757575",
+                                      activebackground="#616161",
                                       command=lambda p=filepath: self.open_folder(p))
                 folder_btn.pack(side=tk.LEFT, padx=3)
+                
+                # אפקט hover לכפתור תיקייה
+                def make_folder_hover(btn):
+                    def on_enter(e):
+                        btn.config(bg="#9E9E9E")
+                    def on_leave(e):
+                        btn.config(bg="#757575")
+                    btn.bind("<Enter>", on_enter)
+                    btn.bind("<Leave>", on_leave)
+                make_folder_hover(folder_btn)
                 
                 # קו מפריד דק
                 if file_idx < len(dup_group['files']) - 1:
