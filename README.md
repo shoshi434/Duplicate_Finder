@@ -13,10 +13,12 @@ Click the link above to download the ready-to-use application. No installation r
 - ✅ **Free Folder Selection** - Any folder on your computer or external drive
 - ✅ **Identical File Detection** - Using Hash (MD5) - 100% accuracy
 - ✅ **Similar Names Detection** - Find files with similar names (image_1.jpg, image 1.jpg)
-- ✅ **User-Friendly Interface** - Simple and intuitive (Hebrew RTL support)
+- ✅ **Stop Scan Anytime** - Stop button to halt scanning mid-process
+- ✅ **Auto Delete Duplicates** - One-click automatic deletion of all identical files (keeps one copy)
+- ✅ **User-Friendly Interface** - Modern design with large checkboxes (Hebrew RTL support)
 - ✅ **Safe Deletion** - Manual file selection + confirmation
 - ✅ **Recursive Scanning** - Scans subfolders as well
-- ✅ **Group Display** - Shows duplicate files in groups
+- ✅ **Group Display** - Shows duplicate files in organized cards
 - ✅ **Folder Navigation** - Button to open file location
 
 ## 🚀 How to Use?
@@ -47,9 +49,11 @@ python duplicate_finder.py
    - ✓ Identify identical files (Hash) - Always recommended
    - ✓ Identify similar names - Useful for finding nearly identical names
    - Set minimum similarity percentage (85% recommended)
-3. **Click "Scan Files"** - The system will start scanning
-4. **Select Files to Delete** - Mark the files you want to delete
-5. **Click "Delete Selected Files"** - Confirm and delete
+3. **Click "Start Scan"** - The system will start scanning (Click ⏹ Stop to halt anytime)
+4. **Select Files to Delete** - Mark the files you want to delete (large checkboxes)
+5. **Delete Options**:
+   - **Delete Selected** - Delete only the files you marked
+   - **Delete All Duplicates** - Auto-delete all identical files (keeps one from each group)
 
 ## 🔧 Technologies
 
@@ -88,10 +92,11 @@ More advanced interface - `PyQt5`
 
 ## 📦 Building the Executable
 
-To build the standalone EXE file:
+To build the standalone EXE file with the custom icon:
 
 ```bash
-python -m PyInstaller --noconfirm --onefile --windowed --name="SHOSHI_Duplicate_Finder" --clean duplicate_finder.py
+pip install pyinstaller
+python -m PyInstaller --onefile --windowed --name "SHOSHI_Duplicate_Finder" --icon="icon.png" duplicate_finder.py --clean
 ```
 
 The executable will be created in the `dist/` folder.
