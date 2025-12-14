@@ -4,7 +4,7 @@ A Python application with a graphical interface for identifying and deleting dup
 
 ## 📥 Quick Download
 
-**[⬇️ Download Application for Immediate Use](https://drive.google.com/file/d/1Yn7oB7ABQNgMY7VTPKSa3uWCyRp6qJcz/view?usp=drive_link)**
+**[⬇️ Download Application for Immediate Use](https://drive.google.com/file/d/14vfqfjLS6ncHvsnVLb8C8qZj6QYdW7tL/view?usp=drive_link)**
 
 Click the link above to download the ready-to-use application. No installation required!
 
