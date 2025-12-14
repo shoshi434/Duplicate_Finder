@@ -22,13 +22,14 @@ class DuplicateFinderApp:
         self.duplicates = []
         self.file_checkboxes = {}
         self.max_display_groups = 100  # הגבלת תצוגה למניעת תקיעות
+        self.scan_stopped = False  # דגל לעצירת סריקה
         
         self.setup_ui()
     
     def setup_ui(self):
         """יצירת הממשק"""
         # כותרת עם גרדיאנט מודרני
-        title_frame = tk.Frame(self.root, bg="#1976D2", height=70)
+        title_frame = tk.Frame(self.root, bg="#1976D2", height=50)
         title_frame.pack(fill=tk.X)
         title_frame.pack_propagate(False)
         
@@ -38,48 +39,48 @@ class DuplicateFinderApp:
         
         tk.Label(title_content, text="🔍 מזהה קבצים כפולים", 
                 bg="#1976D2", fg="white",
-                font=("Segoe UI", 18, "bold")).pack(pady=(5, 0))
+                font=("Segoe UI", 14, "bold")).pack(pady=(3, 0))
         tk.Label(title_content, text="SHOSHI ER | 2025", 
                 bg="#1976D2", fg="#BBDEFB",
-                font=("Segoe UI", 8)).pack(pady=(0, 5))
+                font=("Segoe UI", 7)).pack(pady=(0, 3))
         
         # קו הפרדה צבעוני
         tk.Frame(self.root, bg="#64B5F6", height=3).pack(fill=tk.X)
         
         # שלב 1 - בחירת תיקייה
         folder_frame = tk.Frame(self.root, bg="white", relief=tk.FLAT, bd=0)
-        folder_frame.pack(fill=tk.X, padx=25, pady=8)
+        folder_frame.pack(fill=tk.X, padx=20, pady=4)
         
         # כותרת שלב
         tk.Label(folder_frame, text="שלב 1: בחר תיקייה",
-                font=("Segoe UI", 12, "bold"), bg="white", fg="#424242").pack(anchor="e", pady=(8, 6), padx=15)
+                font=("Segoe UI", 10, "bold"), bg="white", fg="#424242").pack(anchor="e", pady=(5, 3), padx=10)
         
         folder_row = tk.Frame(folder_frame, bg="white")
-        folder_row.pack(fill=tk.X, padx=15, pady=(0, 15))
+        folder_row.pack(fill=tk.X, padx=10, pady=(0, 5))
         
         # תיבת טקסט מעוצבת
         folder_entry = tk.Entry(folder_row, textvariable=self.selected_folder,
-                               font=("Segoe UI", 11), relief=tk.SOLID, bd=1,
-                               highlightthickness=2, highlightcolor="#2196F3",
+                               font=("Segoe UI", 9), relief=tk.SOLID, bd=1,
+                               highlightthickness=1, highlightcolor="#2196F3",
                                highlightbackground="#E0E0E0")
-        folder_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10), ipady=8)
+        folder_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 8), ipady=4)
         
         # כפתור גדול ומעוצב
         browse_btn = tk.Button(folder_row, text="📁 בחר תיקייה",
                               command=self.browse_folder,
-                              font=("Segoe UI", 11, "bold"),
+                              font=("Segoe UI", 9, "bold"),
                               bg="#2196F3", fg="white",
                               activebackground="#1976D2", activeforeground="white",
                               relief=tk.FLAT, bd=0,
-                              padx=25, pady=12, cursor="hand2")
+                              padx=18, pady=6, cursor="hand2")
         browse_btn.pack(side=tk.LEFT)
         
         # שלב 2 - אפשרויות
         options_frame = tk.Frame(self.root, bg="white", relief=tk.FLAT, bd=0)
-        options_frame.pack(fill=tk.X, padx=25, pady=8)
+        options_frame.pack(fill=tk.X, padx=20, pady=4)
         
         tk.Label(options_frame, text="שלב 2: אפשרויות סריקה",
-                font=("Segoe UI", 12, "bold"), bg="white", fg="#424242").pack(anchor="e", pady=(8, 6), padx=15)
+                font=("Segoe UI", 10, "bold"), bg="white", fg="#424242").pack(anchor="e", pady=(5, 3), padx=10)
         
         self.scan_by_hash = tk.BooleanVar(value=True)
         self.scan_by_name = tk.BooleanVar(value=True)
@@ -87,52 +88,52 @@ class DuplicateFinderApp:
         
         # שורת אפשרויות
         options_row = tk.Frame(options_frame, bg="white")
-        options_row.pack(fill=tk.X, padx=15, pady=(0, 15))
+        options_row.pack(fill=tk.X, padx=10, pady=(0, 5))
         
         # Checkboxes מעוצבים
         check1 = tk.Checkbutton(options_row, text="זיהוי קבצים זהים",
                                variable=self.scan_by_hash,
-                               font=("Segoe UI", 11), bg="white",
+                               font=("Segoe UI", 9), bg="white",
                                activebackground="white", selectcolor="#4CAF50",
                                cursor="hand2")
-        check1.pack(side=tk.RIGHT, padx=15)
+        check1.pack(side=tk.RIGHT, padx=10)
         
         check2 = tk.Checkbutton(options_row, text="זיהוי שמות דומים",
                                variable=self.scan_by_name,
-                               font=("Segoe UI", 11), bg="white",
+                               font=("Segoe UI", 9), bg="white",
                                activebackground="white", selectcolor="#FF9800",
                                cursor="hand2")
-        check2.pack(side=tk.RIGHT, padx=15)
+        check2.pack(side=tk.RIGHT, padx=10)
         
         # בורר דמיון
         similarity_frame = tk.Frame(options_row, bg="white")
-        similarity_frame.pack(side=tk.RIGHT, padx=15)
+        similarity_frame.pack(side=tk.RIGHT, padx=10)
         
         tk.Label(similarity_frame, text="דמיון מינימלי:",
-                font=("Segoe UI", 11), bg="white", fg="#616161").pack(side=tk.RIGHT, padx=5)
+                font=("Segoe UI", 9), bg="white", fg="#616161").pack(side=tk.RIGHT, padx=3)
         
         spin = tk.Spinbox(similarity_frame, from_=50, to=100,
                          textvariable=self.min_similarity,
-                         font=("Segoe UI", 11), width=5,
+                         font=("Segoe UI", 9), width=5,
                          relief=tk.SOLID, bd=1)
-        spin.pack(side=tk.RIGHT, padx=5)
+        spin.pack(side=tk.RIGHT, padx=3)
         
         tk.Label(similarity_frame, text="%",
-                font=("Segoe UI", 11), bg="white", fg="#616161").pack(side=tk.RIGHT)
+                font=("Segoe UI", 9), bg="white", fg="#616161").pack(side=tk.RIGHT)
         
         # שלב 3 - כפתורי פעולה גדולים
-        button_frame = tk.Frame(self.root, bg="#f5f5f5", pady=8)
+        button_frame = tk.Frame(self.root, bg="#f5f5f5", pady=4)
         button_frame.pack(fill=tk.X)
         
         # כפתור סריקה ראשי - ירוק וגדול
         self.scan_button = tk.Button(button_frame, text="🔍 התחל סריקה",
                                      command=self.start_scan,
-                                     font=("Segoe UI", 12, "bold"),
+                                     font=("Segoe UI", 9, "bold"),
                                      bg="#4CAF50", fg="white",
                                      activebackground="#388E3C", activeforeground="white",
                                      relief=tk.FLAT, bd=0,
-                                     padx=35, pady=10, cursor="hand2")
-        self.scan_button.pack(side=tk.RIGHT, padx=15)
+                                     padx=20, pady=6, cursor="hand2")
+        self.scan_button.pack(side=tk.RIGHT, padx=8)
         
         # אפקטי hover לכפתור סריקה
         def scan_enter(e):
@@ -143,15 +144,26 @@ class DuplicateFinderApp:
         self.scan_button.bind("<Leave>", scan_leave)
         
         # כפתור מחיקה - אדום
-        self.delete_button = tk.Button(button_frame, text="🗑️ מחק קבצים מסומנים",
+        self.delete_button = tk.Button(button_frame, text="🗑️ מחק מסומנים",
                                        command=self.delete_selected,
-                                       font=("Segoe UI", 12, "bold"),
+                                       font=("Segoe UI", 9, "bold"),
                                        bg="#9E9E9E", fg="white",
                                        activebackground="#d32f2f", activeforeground="white",
                                        relief=tk.FLAT, bd=0, state=tk.DISABLED,
                                        disabledforeground="#E0E0E0",
-                                       padx=35, pady=10, cursor="hand2")
-        self.delete_button.pack(side=tk.RIGHT, padx=15)
+                                       padx=18, pady=6, cursor="hand2")
+        self.delete_button.pack(side=tk.RIGHT, padx=8)
+        
+        # כפתור מחיקת כל הכפולים - אדום כהה
+        self.delete_all_duplicates_button = tk.Button(button_frame, text="🗑️ מחק כל הכפולים",
+                                                      command=self.delete_all_duplicates,
+                                                      font=("Segoe UI", 9, "bold"),
+                                                      bg="#9E9E9E", fg="white",
+                                                      activebackground="#c62828", activeforeground="white",
+                                                      relief=tk.FLAT, bd=0, state=tk.DISABLED,
+                                                      disabledforeground="#E0E0E0",
+                                                      padx=18, pady=6, cursor="hand2")
+        self.delete_all_duplicates_button.pack(side=tk.RIGHT, padx=8)
         
         # אפקטי hover לכפתור מחיקה
         def delete_enter(e):
@@ -163,15 +175,43 @@ class DuplicateFinderApp:
         self.delete_button.bind("<Enter>", delete_enter)
         self.delete_button.bind("<Leave>", delete_leave)
         
+        # אפקטי hover לכפתור מחיקת כל הכפולים
+        def delete_all_enter(e):
+            if self.delete_all_duplicates_button['state'] == tk.NORMAL:
+                self.delete_all_duplicates_button.config(bg="#D32F2F")
+        def delete_all_leave(e):
+            if self.delete_all_duplicates_button['state'] == tk.NORMAL:
+                self.delete_all_duplicates_button.config(bg="#c62828")
+        self.delete_all_duplicates_button.bind("<Enter>", delete_all_enter)
+        self.delete_all_duplicates_button.bind("<Leave>", delete_all_leave)
+        
+        # כפתור עצירה - כתום (מוסתר בהתחלה)
+        self.stop_button = tk.Button(button_frame, text="⏹ עצור",
+                                     command=self.stop_scan,
+                                     font=("Segoe UI", 9, "bold"),
+                                     bg="#FF5722", fg="white",
+                                     activebackground="#E64A19", activeforeground="white",
+                                     relief=tk.FLAT, bd=0,
+                                     padx=20, pady=6, cursor="hand2")
+        # לא מציגים בהתחלה
+        
+        # אפקטי hover לכפתור עצירה
+        def stop_enter(e):
+            self.stop_button.config(bg="#FF7043")
+        def stop_leave(e):
+            self.stop_button.config(bg="#FF5722")
+        self.stop_button.bind("<Enter>", stop_enter)
+        self.stop_button.bind("<Leave>", stop_leave)
+        
         # כפתור עזרה - כחול בהיר
         self.help_button = tk.Button(button_frame, text="❓ עזרה",
                                      command=self.show_help,
-                                     font=("Segoe UI", 10, "bold"),
+                                     font=("Segoe UI", 9, "bold"),
                                      bg="#03A9F4", fg="white",
                                      activebackground="#0288D1", activeforeground="white",
                                      relief=tk.FLAT, bd=0,
-                                     padx=25, pady=8, cursor="hand2")
-        self.help_button.pack(side=tk.LEFT, padx=15)
+                                     padx=18, pady=6, cursor="hand2")
+        self.help_button.pack(side=tk.LEFT, padx=8)
         
         # אפקטי hover לכפתור עזרה
         def help_enter(e):
@@ -183,17 +223,17 @@ class DuplicateFinderApp:
         
         # סטטוס בולט
         status_frame = tk.Frame(self.root, bg="#E3F2FD", relief=tk.FLAT, bd=0)
-        status_frame.pack(fill=tk.X, padx=25, pady=5)
+        status_frame.pack(fill=tk.X, padx=20, pady=3)
         
         self.status_label = tk.Label(status_frame, text="✓ מוכן לסריקה",
-                                     font=("Segoe UI", 10, "bold"),
+                                     font=("Segoe UI", 8, "bold"),
                                      bg="#E3F2FD", fg="#1976D2",
-                                     pady=6)
+                                     pady=3)
         self.status_label.pack()
         
         # פס התקדמות גדול יותר
         progress_container = tk.Frame(self.root, bg="#f5f5f5")
-        progress_container.pack(fill=tk.X, padx=25, pady=(0, 8))
+        progress_container.pack(fill=tk.X, padx=20, pady=(0, 5))
         
         self.progress = ttk.Progressbar(progress_container, mode='indeterminate', length=400)
         self.progress.pack(pady=5)
@@ -339,6 +379,14 @@ class DuplicateFinderApp:
         if folder:
             self.selected_folder.set(folder)
     
+    def stop_scan(self):
+        """עצירת הסריקה"""
+        self.scan_stopped = True
+        self.update_status("⏹ הסריקה נעצרה על ידי המשתמש")
+        self.stop_button.pack_forget()
+        self.scan_button.config(state=tk.NORMAL)
+        self.progress.stop()
+    
     def start_scan(self):
         """התחלת סריקה בחוט נפרד"""
         folder = self.selected_folder.get()
@@ -357,9 +405,11 @@ class DuplicateFinderApp:
         # איפוס גלילה
         self.results_canvas.yview_moveto(0)
         
-        # השבתת כפתורים
+        # השבתת כפתורים והצגת כפתור עצירה
+        self.scan_stopped = False
         self.scan_button.config(state=tk.DISABLED)
         self.delete_button.config(state=tk.DISABLED)
+        self.stop_button.pack(side=tk.RIGHT, padx=15, after=self.scan_button)
         self.progress.start()
         
         # הרצה בחוט נפרד
@@ -378,10 +428,24 @@ class DuplicateFinderApp:
         skipped = 0
         
         for root, dirs, files in os.walk(folder):
+            # בדיקה אם המשתמש עצר את הסריקה
+            if self.scan_stopped:
+                self.root.after(0, lambda: self.progress.stop())
+                self.root.after(0, lambda: self.scan_button.config(state=tk.NORMAL))
+                self.root.after(0, lambda: self.stop_button.pack_forget())
+                return
+            
             # דילוג על תיקיות מערכת
             dirs[:] = [d for d in dirs if not d.startswith('$') and d not in ['System Volume Information', 'Recycle.Bin']]
             
             for file in files:
+                # בדיקה אם המשתמש עצר את הסריקה
+                if self.scan_stopped:
+                    self.root.after(0, lambda: self.progress.stop())
+                    self.root.after(0, lambda: self.scan_button.config(state=tk.NORMAL))
+                    self.root.after(0, lambda: self.stop_button.pack_forget())
+                    return
+                
                 filepath = os.path.join(root, file)
                 try:
                     # בדיקה שהקובץ נגיש
@@ -420,9 +484,14 @@ class DuplicateFinderApp:
         self.root.after(0, self.display_results)
         self.root.after(0, lambda: self.progress.stop())
         self.root.after(0, lambda: self.scan_button.config(state=tk.NORMAL))
+        self.root.after(0, lambda: self.stop_button.pack_forget())
         
         if duplicates:
             self.root.after(0, lambda: self.delete_button.config(state=tk.NORMAL, bg="#f44336"))
+            # בדיקה אם יש קבוצות זהות (לא רק דומות)
+            has_identical = any(d['type'] == 'identical' for d in duplicates)
+            if has_identical:
+                self.root.after(0, lambda: self.delete_all_duplicates_button.config(state=tk.NORMAL, bg="#c62828"))
     
     def find_by_hash(self, files):
         """מציאת קבצים זהים לפי Hash - מהיר ויעיל"""
@@ -430,6 +499,10 @@ class DuplicateFinderApp:
         total = len(files)
         
         for i, filepath in enumerate(files):
+            # בדיקה אם המשתמש עצר את הסריקה
+            if self.scan_stopped:
+                return []
+            
             try:
                 # עדכון כל 50 קבצים או כל 2%
                 if i % 50 == 0 or (i % max(1, total // 50) == 0):
@@ -471,6 +544,10 @@ class DuplicateFinderApp:
         checked_pairs = set()
         
         for i, (name1, path1) in enumerate(filenames):
+            # בדיקה אם המשתמש עצר את הסריקה
+            if self.scan_stopped:
+                return []
+            
             # עדכון כל 100 קבצים או כל 5%
             if i % 100 == 0 or (i % max(1, total // 20) == 0):
                 progress = int((i / total) * 100)
@@ -796,6 +873,89 @@ class DuplicateFinderApp:
         except Exception as e:
             messagebox.showerror("שגיאה", f"לא ניתן לפתוח את התיקיה:\n{str(e)}")
     
+    def delete_all_duplicates(self):
+        """מחיקת כל הקבצים הכפולים הזהים - משאיר קובץ אחד מכל קבוצה"""
+        # איסוף כל הקבצים למחיקה מקבוצות זהות בלבד
+        files_to_delete = []
+        groups_count = 0
+        
+        for dup_group in self.duplicates:
+            if dup_group['type'] == 'identical':  # רק קבצים זהים, לא דומים
+                # משאיר את הקובץ הראשון, מוחק את כל השאר
+                files = dup_group['files']
+                if len(files) > 1:
+                    files_to_delete.extend(files[1:])  # כל הקבצים מלבד הראשון
+                    groups_count += 1
+        
+        if not files_to_delete:
+            messagebox.showinfo("אין מה למחוק", "לא נמצאו קבצים כפולים זהים למחיקה")
+            return
+        
+        # אישור מחיקה עם מידע מפורט
+        result = messagebox.askyesno(
+            "⚠️ אישור מחיקה המונית",
+            f"פעולה זו תמחק {len(files_to_delete)} קבצים כפולים מתוך {groups_count} קבוצות זהות.\n\n"
+            f"מכל קבוצה ישאר קובץ אחד (הראשון שנמצא).\n"
+            f"קבוצות עם שמות דומים לא יימחקו.\n\n"
+            f"⚠️ המחיקה סופית ולא ניתן לשחזר!\n\n"
+            f"האם להמשיך?",
+            icon='warning'
+        )
+        
+        if not result:
+            return
+        
+        # מחיקה
+        deleted = 0
+        errors = []
+        
+        for filepath in files_to_delete:
+            try:
+                os.remove(filepath)
+                deleted += 1
+            except Exception as e:
+                errors.append(f"{os.path.basename(filepath)}: {str(e)}")
+        
+        # עדכון רשימת הכפילויות - הסרת קבוצות שנמחקו לגמרי
+        files_to_delete_set = set(files_to_delete)
+        updated_duplicates = []
+        
+        for dup_group in self.duplicates:
+            remaining_files = [f for f in dup_group['files'] if f not in files_to_delete_set]
+            
+            # רק אם נשארו 2+ קבצים בקבוצה
+            if len(remaining_files) > 1:
+                dup_group['files'] = remaining_files
+                updated_duplicates.append(dup_group)
+        
+        self.duplicates = updated_duplicates
+        
+        # הצגת תוצאות
+        message = f"✓ נמחקו {deleted} קבצים בהצלחה!\n\nנשאר קובץ אחד מכל קבוצה."
+        if errors:
+            message += f"\n\n⚠️ שגיאות ({len(errors)}):\n" + "\n".join(errors[:5])
+            if len(errors) > 5:
+                message += f"\n... ועוד {len(errors) - 5}"
+        
+        messagebox.showinfo("סיום מחיקה", message)
+        
+        # עדכון התצוגה
+        for widget in self.results_inner_frame.winfo_children():
+            widget.destroy()
+        
+        self.file_checkboxes = {}
+        self.display_results()
+        
+        # אם לא נשארו כפילויות, השבת את כפתורי המחיקה
+        if not self.duplicates:
+            self.delete_button.config(state=tk.DISABLED, bg="#9E9E9E")
+            self.delete_all_duplicates_button.config(state=tk.DISABLED, bg="#9E9E9E")
+        else:
+            # בדיקה אם עדיין יש קבוצות זהות
+            has_identical = any(d['type'] == 'identical' for d in self.duplicates)
+            if not has_identical:
+                self.delete_all_duplicates_button.config(state=tk.DISABLED, bg="#9E9E9E")
+    
     def delete_selected(self):
         """מחיקת קבצים מסומנים"""
         files_to_delete = [path for path, var in self.file_checkboxes.items() 
@@ -858,9 +1018,15 @@ class DuplicateFinderApp:
         self.file_checkboxes = {}
         self.display_results()
         
-        # אם לא נשארו כפילויות, השבת את כפתור המחיקה
+        # אם לא נשארו כפילויות, השבת את כפתורי המחיקה
         if not self.duplicates:
-            self.delete_button.config(state=tk.DISABLED)
+            self.delete_button.config(state=tk.DISABLED, bg="#9E9E9E")
+            self.delete_all_duplicates_button.config(state=tk.DISABLED, bg="#9E9E9E")
+        else:
+            # בדיקה אם עדיין יש קבוצות זהות
+            has_identical = any(d['type'] == 'identical' for d in self.duplicates)
+            if not has_identical:
+                self.delete_all_duplicates_button.config(state=tk.DISABLED, bg="#9E9E9E")
     
     def update_status(self, text):
         """עדכון טקסט סטטוס"""
@@ -943,9 +1109,9 @@ class DuplicateFinderApp:
                 "number": "3",
                 "title": "הפעלת סריקה", 
                 "icon": "🔍",
-                "content": "לחץ סרוק קבצים והמתן\n"
+                "content": "לחץ 'התחל סריקה' והמתן\n"
                          "הזמן משתנה לפי כמות הקבצים\n"
-                         "תיקיות גדולות יכולות לקחת מספר דקות",
+                         "ניתן ללחוץ על '⏹ עצור' בכל רגע לעצירת הסריקה",
                 "color": "#10b981",
                 "bg": "#ecfdf5"
             },
@@ -953,21 +1119,32 @@ class DuplicateFinderApp:
                 "number": "4",
                 "title": "בחירת קבצים",
                 "icon": "✓",
-                "content": "סמן את הקבצים שרוצה למחוק\n"
-                         "לחץ 📄 כדי לפתוח ולבדוק את הקובץ\n"
-                         "לחץ 📁 כדי לראות את המיקום",
+                "content": "סמן את הקבצים שרוצה למחוק (תיבות סימון גדולות)\n"
+                         "לחץ 'פתח' כדי לפתוח ולבדוק את הקובץ\n"
+                         "לחץ 'תיקייה' כדי לראות את המיקום",
                 "color": "#f59e0b",
                 "bg": "#fffbeb"
             },
             {
                 "number": "5",
-                "title": "מחיקה סופית",
+                "title": "מחיקה ידנית",
                 "icon": "🗑️",
-                "content": "לחץ מחק קבצים מסומנים\n"
+                "content": "לחץ 'מחק מסומנים' למחיקת הקבצים שסימנת\n"
                          "המחיקה סופית - הקבצים לא עוברים לסל מיחזור\n"
                          "תקבל אישור לפני המחיקה",
                 "color": "#ef4444",
                 "bg": "#fef2f2"
+            },
+            {
+                "number": "6",
+                "title": "מחיקה אוטומטית",
+                "icon": "⚡",
+                "content": "לחץ 'מחק כל הכפולים' למחיקה אוטומטית\n"
+                         "מוחק רק קבצים זהים 100% (לא דומים!)\n"
+                         "משאיר קובץ אחד מכל קבוצה זהה\n"
+                         "חוסך זמן במקרה של הרבה כפילויות",
+                "color": "#9333ea",
+                "bg": "#faf5ff"
             }
         ]
         
@@ -1033,6 +1210,8 @@ class DuplicateFinderApp:
             "מוצגות עד 100 קבוצות ראשונות בלבד •\n"
             "להעלות את אחוז הדמיון ל-90+ אם יש הרבה תוצאות •\n"
             "זיהוי שמות עובד עד 1000 קבצים •\n"
+            "כפתור 'עצור' מופיע רק בזמן סריקה •\n"
+            "'מחק כל הכפולים' מופיע רק אם יש קבצים זהים 100% •\n"
             "מומלץ לגבות קבצים חשובים לפני השימוש הראשון •\n"
             "אחרי מחיקה התוצאות מתעדכנות אוטומטית •"
         )
