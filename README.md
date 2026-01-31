@@ -110,4 +110,4 @@ The executable will be created in the `dist/` folder.
 
 ---
 
-**Created with ❤️ in israel**
+**SHO**
